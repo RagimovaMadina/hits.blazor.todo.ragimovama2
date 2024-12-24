@@ -7,9 +7,9 @@ namespace TodoServerApp.Data.Services
     public class MemoryDataService : IDataService
     {
         private static IEnumerable<ForumItem> Forums { get; } = [
-            new() { Id = 1, Name="тема", Question="вопрос", Answer="ответ"},
-            new() { Id = 2, Name="тема", Question="вопрос", Answer="ответ"},
-            new() { Id = 3, Name="тема", Question="вопрос", Answer="ответ"},
+            new() { Id = 1, Name="тема 1", Question="интересный вопрос", Answer="сложный ответ"},
+            new() { Id = 2, Name="тема 2", Question="неинтересный вопрос", Answer="понятный ответ"},
+            new() { Id = 3, Name="тема 3", Question="простой вопрос", Answer="просто ответ"},
         ];
 
         public async Task<IEnumerable<ForumItem>> GetForumItemsAsync()
