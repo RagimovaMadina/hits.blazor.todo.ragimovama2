@@ -1,0 +1,53 @@
+﻿@page "/"
+@inject NavigationManager navigate
+@rendermode InteractiveServer
+@inject IDataService data
+
+<PageTitle>Форум</PageTitle>
+
+<h1>Форум вопросов и ответов</h1>
+
+Хотите задать вопрос?
+
+<div class="container">
+    @if ( forums == null)
+    {
+        <p>Загрузка...</p>
+    }
+    else
+    {
+        <div class="btn-group m-2">
+            <button class="btn btn-primary" @onclick="AddForum">Задать вопрос</button>
+        </div>
+
+        <div class="card-group">
+            @foreach (var forum in forums) //перебирает коллекцию forums и создает карточку для каждого вопроса
+            {
+                <div class="card">
+                    <div class="card-header">
+                        @forum.Question
+                    </div>
+                    <div class="card-body">
+                        <p>@forum.Answer</p>
+                        <p>@forum.Name</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code{
+    IEnumerable<ForumItem>? forums; //поле со списком
+
+    protected override async Task OnInitializedAsync() //метод, вызываемый при инициализации компонента
+    {
+        await base.OnInitializedAsync();
+        forums = await data.GetForumItemsAsync(); //асинхронно загружает список сотрудников с использованием data.GetAllAsync() и сохраняет его в employees
+    }
+
+    void AddForum()
+    {
+        navigate.NavigateTo("forums/add");
+    }
+}
