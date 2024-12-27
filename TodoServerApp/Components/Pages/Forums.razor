@@ -1,13 +1,13 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
 @inject NavigationManager navigate
 @rendermode InteractiveServer
 @inject IDataService data
+@attribute [Authorize]
 
 <PageTitle>Форум</PageTitle>
 
 <h1>Форум вопросов и ответов</h1>
-
-Хотите задать вопрос?
 
 <div class="container">
     @if ( forums == null)
@@ -30,9 +30,12 @@
                     <div class="card-body">
                         <p>Ответ: @forum.Answer</p>
                         <p>Тема: @forum.Name</p>
+                        <p>Рейтинг: @forum.Quantity</p>
                     </div>
                     <div class="card-footer">
-                        <a class="btn btn-primary" href="forums/@forum.Id">Редактировать</a>
+                        <button class="btn btn-success" @onclick:stopPropagation="true" @onclick="() => IncrementQuantity(forum)">+</button>
+                        <button class="btn btn-warning" @onclick:stopPropagation="true" @onclick="() => DecrementQuantity(forum)" disabled="@(forum.Quantity <= 0)">-</button>
+                        <a class="btn btn-primary" href="forums/@forum.Id">Ответить или редактировать</a>
                         <button class="btn btn-primary" @onclick="async() => await DeleteForum(forum.Id)">Удалить</button>
                     </div>
                 </div>
@@ -59,5 +62,20 @@
     {
         await data.DeleteAsync(id);
         forums = await data.GetForumItemsAsync();
+    }
+
+    void IncrementQuantity(ForumItem task)
+    {
+        task.Quantity++;
+        StateHasChanged();
+    }
+
+    void DecrementQuantity(ForumItem task)
+    {
+        if (task.Quantity > 0)
+        {
+            task.Quantity--;
+            StateHasChanged();
+        }
     }
 }
