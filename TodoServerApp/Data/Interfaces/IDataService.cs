@@ -7,5 +7,6 @@ namespace TodoServerApp.Data.Interfaces
         Task<IEnumerable<ForumItem>> GetForumItemsAsync();
         Task SaveAsync(ForumItem item);
         Task<ForumItem> GetForumAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

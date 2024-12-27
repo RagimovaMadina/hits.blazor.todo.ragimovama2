@@ -28,8 +28,12 @@
                         @forum.Question
                     </div>
                     <div class="card-body">
-                        <p>@forum.Answer</p>
-                        <p>@forum.Name</p>
+                        <p>Ответ: @forum.Answer</p>
+                        <p>Тема: @forum.Name</p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-primary" href="forums/@forum.Id">Редактировать</a>
+                        <button class="btn btn-primary" @onclick="async() => await DeleteForum(forum.Id)">Удалить</button>
                     </div>
                 </div>
             }
@@ -49,5 +53,11 @@
     void AddForum()
     {
         navigate.NavigateTo("forums/add");
+    }
+
+    async Task DeleteForum(int id)
+    {
+        await data.DeleteAsync(id);
+        forums = await data.GetForumItemsAsync();
     }
 }

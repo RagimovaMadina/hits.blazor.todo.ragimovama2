@@ -28,5 +28,13 @@ namespace TodoServerApp.Data.Services
             return await context.ForumItems.FirstAsync(x => x.Id == id);
             //Использует FirstAsync, чтобы найти первую запись в таблице, где Id совпадает с переданным значением
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var forumItem = await context.ForumItems.FirstAsync(x => x.Id == id);
+            // Ищет объект в таблице EmployeeItems по ID
+            context.ForumItems.Remove(forumItem); // Удаляет найденный объект из базы данных
+            await context.SaveChangesAsync(); // Сохраняет изменения в базе данных
+        }
     }
 }
