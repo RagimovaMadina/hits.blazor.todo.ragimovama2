@@ -9,5 +9,24 @@ namespace TodoServerApp.Data.Services
         {
             return await context.ForumItems.ToArrayAsync();
         }
+
+        public async Task SaveAsync(ForumItem forumItem)
+        {
+            if (forumItem.Id == 0) //Проверяет, является ли объект новым (Id == 0
+            {
+                await context.ForumItems.AddAsync(forumItem); //Если объект новый, он добавляется в таблицу EmployeeItems
+            }
+            else
+            {
+                context.ForumItems.Update(forumItem); // Если объект существует, он обновляется
+            }
+            await context.SaveChangesAsync(); //Сохраняет изменения в базе данных
+        }
+
+        public async Task<ForumItem> GetForumAsync(int id) // Получение сотрудника по ID
+        {
+            return await context.ForumItems.FirstAsync(x => x.Id == id);
+            //Использует FirstAsync, чтобы найти первую запись в таблице, где Id совпадает с переданным значением
+        }
     }
 }

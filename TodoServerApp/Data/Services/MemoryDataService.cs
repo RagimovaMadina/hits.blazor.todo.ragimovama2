@@ -17,5 +17,15 @@ namespace TodoServerApp.Data.Services
             await Task.Delay(1000);
             return await Task.FromResult(Forums);
         }
+
+        public Task<ForumItem> GetForumAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync(ForumItem item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

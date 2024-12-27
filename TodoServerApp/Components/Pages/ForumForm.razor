@@ -1,6 +1,63 @@
 ﻿@page "/forums/add"
-<h3>ForumForm</h3>
+@page "/forums/{Id:int}"
+
+@inject IDataService data
+@inject NavigationManager navigate
+
+@if (ForumItem != null)
+{
+    <EditForm Model="ForumItem" FormName="ForumForm" OnValidSubmit="ValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <h2>Новый вопрос</h2>
+
+        <InputNumber @bind-Value="ForumItem.Id" hidden />
+        <div class="form-group d-flex justify-content-between m-2">
+            <label class="col-form-label col-3">Тема</label>
+            <InputText @bind-Value="ForumItem.Name" Class="form-control" />
+            <ValidationMessage For="() => ForumItem.Name" />
+        </div>
+        <div class="form-group d-flex justify-content-between m-2">
+            <label class="col-form-label col-3">Вопрос</label>
+            <InputText @bind-Value="ForumItem.Question" Class="form-control" />
+            <ValidationMessage For="() => ForumItem.Question" />
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary m-2" type="submit">Отправить</button>
+            <a class="btn btn-primary m-2" href="/">Отмена</a>
+        </div>
+    </EditForm>
+}
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    [SupplyParameterFromForm]
+    ForumItem? ForumItem { get; set; }
+
+    async Task ValidSubmit() // метод, вызываемый при успешной валидации формы
+    {
+        await data.SaveAsync(ForumItem!); // вызывает метод SaveAsync из IDataService для сохранения или обновления данных сотрудника
+        navigate.NavigateTo("/"); // после сохранения перенаправляет пользователя на главную страницу
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (ForumItem == null)
+        {
+            ForumItem = new();
+            // если объект EmployeeItem не инициализирован, создается новый
+            if (Id != 0)
+            {
+                var src = await data.GetForumAsync(Id);
+                // если Id не равен 0(редактирование), загружаются данные сотрудника с помощью data.GetEmployeeAsync(Id)
+                ForumItem.Id = src.Id;
+                ForumItem.Name = src.Name;
+                ForumItem.Question = src.Question;
+            }
+        }
+    }
 }
